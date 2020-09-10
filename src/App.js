@@ -1,4 +1,6 @@
 import React from 'react';
+import axios from 'axios';
+import Movie from './Movie';
 
 class App extends React.Component {
   state = {
@@ -6,19 +8,35 @@ class App extends React.Component {
     movies: [], //로딩한 영화데이터를 저장할 배열
   };
 
+  getMovies = async () => {
+    //구조 분해 할당 적용해 movies 객체 접근, 데이터 저장
+    const {
+      data: {
+        data: { movies },
+      },
+    } = await axios.get('https://yts-proxy.now.sh/list_movies.json?sort_by=rating');
+    this.setState({movies, isLoading: false});
+  }
+
   componentDidMount() {
-    //영화 데이터 로딩
-    setTimeout(() => {
-      this.setState({ isLoading: false});
-    }, 6000);
+    this.getMovies();
   }
 
   render() {
-    const {isLoading} = this.state; 
+    const {isLoading, movies} = this.state; 
 
     return (
       <div>
-        {isLoading ? 'Loading...' : 'We are ready'}
+        {isLoading ? 'Loading...' : movies.map((movie) => {
+          return <Movie 
+            key = {movie.id}
+            id= {movie.id}
+            year= {movie.year}
+            title= {movie.title}
+            summary = {movie.summary}
+            poster = {movie.medium_cover_image}
+          />; //movie 컴포넌트 반환!
+        })}
       </div>
       );
   }
