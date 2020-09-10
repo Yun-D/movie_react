@@ -35,6 +35,8 @@ class Home extends React.Component {
           </div>
 
           ) : (<div className="movies">
+              <h4>200822 ~ 200910 리액트 영화 앱 클론코딩</h4>
+
             {movies.map((movie) => {
               return <Movie 
                 key = {movie.id}
